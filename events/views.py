@@ -12,7 +12,23 @@ def event_list(request):
     events = models.Event.objects.select_related("category").annotate(
         Count("participant")
     )
-    return render(request, "event/events-list.html", {"events": events})
+    data = "abc"
+    if request.method == "POST":
+        data = request.POST
+        if data["name"] != "" and data["category"] != "all":
+            # category = models.Category.get(name=)
+            events = events.filter(name__icontains=data["name"], category__name=data["category"])
+        elif data["name"] != "":
+            events = events.filter(name__icontains=data["name"])
+        elif data["category"] != "all":
+            events = events.filter(category__name=data["category"])
+    search_form = forms.SearchForm()
+    context = {"events": events, "search_form": search_form, "data": data}
+    return render(
+        request,
+        "event/events-list.html",
+        context
+    )
 
 
 def event_details(request, pk):

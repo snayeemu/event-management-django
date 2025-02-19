@@ -85,3 +85,16 @@ class CategoryForm(StyledFormMixin, forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.apply_styled_widgets()
+
+class SearchForm(StyledFormMixin, forms.Form):  
+    name = forms.CharField(max_length=100, required=False, label="Search by name")
+    categories = models.Category.objects.all()
+    CHOICES = (("all", "all"),)
+    for category in categories:
+        CHOICES = (*CHOICES, (category.name, category.name))
+    category = forms.ChoiceField(choices=CHOICES, required=False)
+        
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.apply_styled_widgets()
