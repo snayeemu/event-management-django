@@ -2,3 +2,4 @@ task_env/
 __pychache__/
 db.sqlite3
 node_modules/
+.vscode/
