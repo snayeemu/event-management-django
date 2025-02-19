@@ -91,7 +91,8 @@ class SearchForm(StyledFormMixin, forms.Form):
     categories = models.Category.objects.all()
     CHOICES = (("all", "all"),)
     for category in categories:
-        CHOICES = (*CHOICES, (category.name, category.name))
+        CHOICES = (*CHOICES, (category.name, category.name),)
+    # CHOICES = (("GOOD", "GOOD"),)
     category = forms.ChoiceField(choices=CHOICES, required=False)
         
 
