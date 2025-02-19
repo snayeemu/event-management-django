@@ -10,14 +10,23 @@
     {% endif %}
     <div class="max-w-7xl mx-auto flex flex-col gap-5 justify-center items-center mt-5 ">
         {% for participant  in participants  %}
-            <ul class="bg-blue-500/30 w-[300px] p-3 rounded-2xl flex gap-2 justify-center items-center ">
-                <li class="">➡️ {{participant.name}}</li>
-                <a class="px-4 py-1 bg-green-500 rounded text-white uppercase" href="{% url "participant-update" participant.id %}">update</a>
-                <form action="{% url "participant-delete" participant.id%}" method="POST">
-                    {% csrf_token %}
-                    <button class="cursor-pointer px-4 py-1 bg-red-500 rounded text-white uppercase" type="submit">delete</button>
-                </form>
-            </ul>
+            <div class="bg-blue-500/30 w-[300px] p-3 rounded-2xl">
+                <div class="flex gap-2 justify-center items-center ">
+                    <p class="">➡️ {{participant.name}}</p>
+                    <a class="px-4 py-1 bg-green-500 rounded text-white uppercase" href="{% url "participant-update" participant.id %}">update</a>
+                    <form action="{% url "participant-delete" participant.id%}" method="POST">
+                        {% csrf_token %}
+                        <button class="cursor-pointer px-4 py-1 bg-red-500 rounded text-white uppercase" type="submit">delete</button>
+                    </form>
+                </div>
+                <p class="text-sm">✉️ {{participant.email}}</p>
+                <div class="mt-5">
+                    <h1>Events: </h1>
+                    {% for event  in participant.events.all  %}
+                        <li class="text-sm">{{event.name}}</li>
+                    {% endfor %}
+                </div>
+            </div>
         {% endfor %}
     </div>
 {% endblock content  %}

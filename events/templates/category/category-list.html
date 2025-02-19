@@ -10,14 +10,17 @@
     {% endif %}
     <div class="max-w-7xl mx-auto flex flex-col gap-5 justify-center items-center mt-5 ">
         {% for category  in categories  %}
-            <ul class="bg-blue-500/30 w-[300px] p-3 rounded-2xl flex gap-2 justify-center items-center ">
-                <li class="">➡️ {{category.name}}</li>
-                <a class="px-4 py-1 bg-green-500 rounded text-white uppercase" href="{% url "category-update" category.id %}">update</a>
-                <form action="{% url "category-delete" category.id%}" method="POST">
-                    {% csrf_token %}
-                    <button class="cursor-pointer px-4 py-1 bg-red-500 rounded text-white uppercase" type="submit">delete</button>
-                </form>
-            </ul>
+            <div class="bg-blue-500/30 w-[300px] p-3 rounded-2xl flex flex-col justify-center items-center">
+                <div class="flex gap-2 justify-center items-center ">
+                    <p class="">➡️ {{category.name}}</p>
+                    <a class="px-4 py-1 bg-green-500 rounded text-white uppercase" href="{% url "category-update" category.id %}">update</a>
+                    <form action="{% url "category-delete" category.id%}" method="POST">
+                        {% csrf_token %}
+                        <button class="cursor-pointer px-4 py-1 bg-red-500 rounded text-white uppercase" type="submit">delete</button>
+                    </form>
+                </div>
+                <p class="text-sm mt-5">{{category.description}}</p>
+            </div>
         {% endfor %}
     </div>
 {% endblock content  %}

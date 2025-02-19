@@ -23,7 +23,7 @@
             <!-- Stats Grid  -->
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 <!-- Total Task  -->
-                <a href="">
+                <a href="{% url "participant-list" %}">
                     <div class="bg-white rounded-xl p-6 shadow-sm">
                         <h3 class="text-sm font-medium text-gray-500 mb-4">TOTAL PARTICIPANTS</h3>
                         <div class="flex justify-between items-start">
@@ -42,7 +42,7 @@
                     </div>
                 </a>
                 <!-- Completed Task  -->
-                <a href="">
+                <a href="{% url "organizer-dashboard" %}?q=all">
                     <div class="bg-white rounded-xl p-6 shadow-sm">
                         <h3 class="text-sm font-medium text-gray-500 mb-4">
                             TOTAL EVENTS
@@ -63,7 +63,7 @@
                     </div>
                 </a>
                 <!-- Task In Progress  -->
-                <a href="">
+                <a href="{% url "organizer-dashboard" %}?q=upcoming">
                     <div class="bg-white rounded-xl p-6 shadow-sm">
                         <h3 class="text-sm font-medium text-gray-500 mb-4">
                             UPCOMING EVENT
@@ -83,7 +83,7 @@
                         </div>
                     </div>
                 </a>
-                <a href="">
+                <a href="{% url "organizer-dashboard" %}?q=past">
                     <div class="bg-white rounded-xl p-6 shadow-sm">
                         <h3 class="text-sm font-medium text-gray-500 mb-4">PAST EVENTS</h3>
                         <div class="flex justify-between items-start">

@@ -17,18 +17,16 @@ def event_list(request):
         data = request.POST
         if data["name"] != "" and data["category"] != "all":
             # category = models.Category.get(name=)
-            events = events.filter(name__icontains=data["name"], category__name=data["category"])
+            events = events.filter(
+                name__icontains=data["name"], category__name=data["category"]
+            )
         elif data["name"] != "":
             events = events.filter(name__icontains=data["name"])
         elif data["category"] != "all":
             events = events.filter(category__name=data["category"])
     search_form = forms.SearchForm()
     context = {"events": events, "search_form": search_form, "data": data}
-    return render(
-        request,
-        "event/events-list.html",
-        context
-    )
+    return render(request, "event/events-list.html", context)
 
 
 def event_details(request, pk):
@@ -185,13 +183,20 @@ def category_delete(request, pk):
 
 def organizer_dashboard(request):
     # Aggregate query to calculate the total number of participants
+    q = request.GET.get("q", "all")
     total_participants = models.Participant.objects.aggregate(total=Count("id"))[
-        "total"
-    ]
-    events = models.Event.objects.select_related("category").annotate(
-        Count("participant")
-    )
-    counts = events.aggregate(
+            "total"
+        ]
+    base = models.Event.objects.select_related("category")
+    if q == "all":
+        events = base.all()
+    elif q == "upcoming":
+        events = base.filter(date__gt=datetime.now())
+    elif q == "past":
+        events = base.filter(date__lt=datetime.now())
+        
+    
+    counts = base.aggregate(
         total=Count("id"),
         upcoming_events=Count("id", Q(date__gt=datetime.now())),
         past_events=Count("id", Q(date__lt=datetime.now())),
