@@ -62,6 +62,11 @@ def event_delete(request, pk):
     return redirect("event-list")
 
 
+def event_details(request, pk):
+    event = get_object_or_404(models.Event, id=pk)
+    return render(request, "event/event-details.html", {"event": event})
+
+
 def participant_list(request):
     participants = models.Participant.objects.prefetch_related("events").all()
     return render(
@@ -171,12 +176,10 @@ def organizer_dashboard(request):
         Count("participant")
     )
     counts = events.aggregate(
-        total = Count("id"),
+        total=Count("id"),
         upcoming_events=Count("id", Q(date__gt=datetime.now())),
         past_events=Count("id", Q(date__lt=datetime.now())),
-
     )
-    past_events = events.filter(date__lt=datetime.now())
     context = {
         "total_participants": total_participants,
         "events": events,

@@ -8,7 +8,7 @@
         {% endfor %}
     </ul>
     {% endif %}
-    <div class="max-w-7xl border mx-auto flex flex-col md:flex-row flex-wrap gap-4 justify-around items-center my-5">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row flex-wrap gap-4 justify-around items-center my-5">
         {% for event  in events %}
             <div class="border w-[300px] h-[450]">
                 <img class="w-full h-[200px] " src="{{ event.image }}" alt="">
@@ -17,12 +17,12 @@
                     <p>Category: {{event.category.name}}</p>
                     <p>Total Participants: {{ event.participant__count}}</p>
                     <div class="flex gap-2">
-                        <a class="px-2 py-0.5 bg-green-500 rounded text-white" href="{% url "event-update" event.id %}">update</a>
+                        <a class="px-2 py-0.5 bg-green-500 rounded text-white uppercase" href="{% url "event-update" event.id %}">update</a>
                         <form action="{% url "event-delete" event.id%}" method="POST">
                             {% csrf_token %}
-                            <button class="px-2 py-0.5 bg-red-500 rounded text-white cursor-pointer" type="submit">delete</button>
+                            <button class="px-2 py-0.5 bg-red-500 rounded text-white uppercase cursor-pointer" type="submit">delete</button>
                         </form>
-                        <a class="px-2 py-0.5 bg-blue-500 rounded text-white" href="{% url "event-update" event.id %}">details</a>
+                        <a class="px-2 py-0.5 bg-blue-500 rounded text-white uppercase" href="{% url "event-details" event.id %}">details</a>
                     </div>
                 </div>
             </div>
