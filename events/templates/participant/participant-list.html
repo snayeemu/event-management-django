@@ -1,0 +1,21 @@
+{% extends "base/base.html" %}
+{% block title  %}Participants List{% endblock title  %}
+{% block content  %}
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li class="px-2 py-2 rounded bg-red-500">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <ul>
+        {% for participant  in participants  %}
+            <li class="ms-5">➡️ {{participant.name}}</li>
+            <a href="{% url "participant-update" participant.id %}">update</a>
+            <form action="{% url "participant-delete" participant.id%}" method="POST">
+                {% csrf_token %}
+                <button type="submit">delete</button>
+            </form>
+        {% endfor %}
+    </ul>
+{% endblock content  %}

@@ -1,0 +1,21 @@
+{% extends "base/base.html" %}
+{% block title  %}categorys List{% endblock title  %}
+{% block content  %}
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li class="px-2 py-2 rounded bg-red-500">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <ul>
+        {% for category  in categories  %}
+            <li class="ms-5">➡️ {{category.name}}</li>
+            <a href="{% url "category-update" category.id %}">update</a>
+            <form action="{% url "category-delete" category.id%}" method="POST">
+                {% csrf_token %}
+                <button type="submit">delete</button>
+            </form>
+        {% endfor %}
+    </ul>
+{% endblock content  %}

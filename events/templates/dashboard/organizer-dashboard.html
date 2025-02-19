@@ -1,0 +1,40 @@
+{% extends "dashboard/dashboard-base.html" %}
+{% block events  %}
+    <div class="bg-white rounded-xl shadow-sm">
+        <div class="grid grid-cols-4 p-4 border-b border-gray-100 text-sm text-gray-500">
+        <div>EVENT TITLE</div>
+        <div>DATE</div>
+        <div>TEAM</div> 
+        <div>LOCATION</div>
+        </div>
+        <!-- Task Items -->
+        <div class="divide-y divide-gray-100">
+        {% for event in events %}
+            <!-- Task 1 -->
+            <div class="grid grid-cols-4 gap-4 p-4 items-center">
+                <div class="flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                <span>{{event.name}}</span>
+                </div>
+                <div>
+                <span class="px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-sm">{{event.date}}</span>
+                </div>
+                <div class="flex -space-x-2">
+                {% for participant in event.participant_set.all %}
+                    <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm border-2 border-white">
+                    {% if participant.name|length > 2 %}
+                        {{participant.name|slice:2}}
+                        {% else %}
+                        {{participant.name}}
+                    {% endif %}
+                    </div>
+                {% endfor %}
+                </div>
+                <div class="text-gray-500">{{event.location}}</div>
+            </div>
+        {% endfor %} {% comment %}
+
+        {% endcomment %}
+        </div>
+    </div>
+{% endblock events  %}
