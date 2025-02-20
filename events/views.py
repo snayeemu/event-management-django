@@ -24,7 +24,7 @@ def event_list(request):
             events = events.filter(name__icontains=data["name"])
         elif data["category"] != "all":
             events = events.filter(category__name=data["category"])
-    search_form = forms.SearchForm()
+    search_form = forms.SearchForm(request.GET)
     context = {"events": events, "search_form": search_form, "data": data}
     return render(request, "event/events-list.html", context)
 

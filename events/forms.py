@@ -87,7 +87,12 @@ class CategoryForm(StyledFormMixin, forms.ModelForm):
         self.apply_styled_widgets()
 
 class SearchForm(StyledFormMixin, forms.Form):  
-    name = forms.CharField(max_length=100, required=False, label="Search by name")
+    name = forms.CharField(
+        max_length=100,
+        required=False,
+        label='',  # Remove the label
+        widget=forms.TextInput(attrs={'placeholder': 'Enter your search term...', "class": "form-control"})  # Add a placeholder
+    )
     categories = models.Category.objects.all()
     CHOICES = (("all", "all"),)
     for category in categories:
