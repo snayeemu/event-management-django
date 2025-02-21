@@ -3,25 +3,10 @@
 {% block content  %}
     <div class="max-w-[1400px] mx-auto mt-5">
         <!-- Header  -->
-        <header class="flex justify-between items-center mb-8">
-            <h1 class="text-2xl font-semibold">Dashboard</h1>
-            <div class="flex items-center gap-4">
-                <button class="p-2 rounded-full hover:bg-gray-100 relative">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="size-6"> 
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
-                    </svg>
-                </button>
-                <button class="w-10 h-10 bg-blue-500 rounded-full text-white font-semibold">
-                    B
-                </button>
-            </div>
-        </header>
 
         <main>
             <!-- Stats Grid  -->
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {% comment %} <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 <!-- Total Task  -->
                 <a href="{% url "participant-list" %}">
                     <div class="bg-white rounded-xl p-6 shadow-sm">
@@ -101,6 +86,25 @@
                         </div>
                     </div>
                 </a>
+            </div> {% endcomment %}
+
+            <div class="my-5 grid lg:grid-cols-4 gap-5"> 
+                <a href="{% url "participant-list" %}" class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center my-auto">
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Total Participants</h5>
+                    <p class="font-normal text-4xl text-gray-700 dark:text-gray-400">{{total_participants}}</p>
+                </a>   
+                <a href="{% url "organizer-dashboard" %}?q=all" class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center my-auto">
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Total Events</h5>
+                    <p class="font-normal text-4xl text-gray-700 dark:text-gray-400">{{counts.total}}</p>
+                </a>      
+                <a href="{% url "organizer-dashboard" %}?q=upcoming" class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center my-auto">
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Upcoming Events</h5>
+                    <p class="font-normal text-4xl text-gray-700 dark:text-gray-400">{{counts.upcoming_events}}</p>
+                </a>      
+                <a href="{% url "organizer-dashboard" %}?q=past" class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center my-auto">
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Past Events</h5>
+                    <p class="font-normal text-4xl text-gray-700 dark:text-gray-400">{{counts.past_events}}</p>
+                </a>      
             </div>
 
             {% if messages %}

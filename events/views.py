@@ -185,17 +185,17 @@ def organizer_dashboard(request):
     # Aggregate query to calculate the total number of participants
     q = request.GET.get("q", "all")
     total_participants = models.Participant.objects.aggregate(total=Count("id"))[
-            "total"
-        ]
+        "total"
+    ]
     base = models.Event.objects.select_related("category")
+    todays_event = base.filter(date=datetime.now().date())
     if q == "all":
-        events = base.all()
+        events = base.annotate(Count("participant"))
     elif q == "upcoming":
-        events = base.filter(date__gt=datetime.now())
+        events = base.filter(date__gt=datetime.now()).annotate(Count("participant"))
     elif q == "past":
-        events = base.filter(date__lt=datetime.now())
-        
-    
+        events = base.filter(date__lt=datetime.now()).annotate(Count("participant"))
+
     counts = base.aggregate(
         total=Count("id"),
         upcoming_events=Count("id", Q(date__gt=datetime.now())),
@@ -205,5 +205,6 @@ def organizer_dashboard(request):
         "total_participants": total_participants,
         "events": events,
         "counts": counts,
+        "todays_event": todays_event, 
     }
     return render(request, "dashboard/organizer-dashboard.html", context)

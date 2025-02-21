@@ -98,7 +98,7 @@ class SearchForm(StyledFormMixin, forms.Form):
     for category in categories:
         CHOICES = (*CHOICES, (category.name, category.name),)
     # CHOICES = (("GOOD", "GOOD"),)
-    category = forms.ChoiceField(choices=CHOICES, required=False)
+    category = forms.ChoiceField(choices=CHOICES, required=False, label="")
         
 
     def __init__(self, *args, **kwargs):
