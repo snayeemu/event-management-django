@@ -1,4 +1,4 @@
-task_env/
+event-env/
 __pychache__/
 db.sqlite3
 node_modules/
