@@ -9,7 +9,7 @@
                 {% endfor %}
             </ul>
         {% endif %}
-        <form method="POST">
+        <form method="POST" class="text-black">
             {% csrf_token %}
             {% comment %} {{category_form.as_p}}{% endcomment %}
             {{participant_form.as_p}} 

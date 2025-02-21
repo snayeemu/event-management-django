@@ -24,4 +24,4 @@ class Event(models.Model):
 class Participant(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
-    events = models.ManyToManyField(Event)
+    events = models.ManyToManyField(Event) 

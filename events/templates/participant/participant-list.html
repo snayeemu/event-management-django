@@ -1,6 +1,20 @@
 {% extends "base/base.html" %}
 {% block title  %}Participants List{% endblock title  %}
 {% block content  %}
+    <div id="sticky-banner" tabindex="-1" class=" z-50 flex justify-between w-full p-4 border-b border-gray-200 bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+        <div class="flex items-center mx-auto">
+            <p class="flex items-center text-sm font-normal text-gray-500 dark:text-gray-400">
+                <span class="inline-flex p-1 me-3 bg-gray-200 rounded-full dark:bg-gray-600 w-6 h-6 items-center justify-center shrink-0">
+                    <svg class="w-3 h-3 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 19">
+                        <path d="M15 1.943v12.114a1 1 0 0 1-1.581.814L8 11V5l5.419-3.871A1 1 0 0 1 15 1.943ZM7 4H2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2v5a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2V4ZM4 17v-5h1v5H4ZM16 5.183v5.634a2.984 2.984 0 0 0 0-5.634Z"/>
+                    </svg>
+                    <span class="sr-only">Light bulb</span>
+                </span>
+                <span>Want to have a new participants? <a href="{% url "participant-create" %}" class="inline font-medium text-blue-600 underline dark:text-blue-500 hover:no-underline">Create Participants</a></span>
+            </p>
+        </div>
+    </div>
+
     {% if messages %}
         <ul class="messages">
             {% for message in messages %}
@@ -8,9 +22,9 @@
             {% endfor %}
         </ul>
     {% endif %}
-    <div class="max-w-7xl mx-auto flex flex-col gap-5 justify-center items-center mt-5 ">
+    <div class="max-w-7xl mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-5 justify-center items-center mt-5 p-5 ">
         {% for participant  in participants  %}
-            <div class="bg-blue-500/30 w-[300px] p-3 rounded-2xl">
+            {% comment %} <div class="bg-blue-500/30 w-[300px] p-3 rounded-2xl">
                 <div class="flex gap-2 justify-center items-center ">
                     <p class="">➡️ {{participant.name}}</p>
                     <a class="px-4 py-1 bg-green-500 rounded text-white uppercase" href="{% url "participant-update" participant.id %}">update</a>
@@ -26,7 +40,33 @@
                         <li class="text-sm">{{event.name}}</li>
                     {% endfor %}
                 </div>
-            </div>
+            </div> {% endcomment %}
+
+            <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 mx-auto h-full w-full">
+                <a href="#">
+                    <h5 class=" text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{participant.name}}</h5>
+                </a>
+                <p class="mb-5 font-normal text-gray-700 dark:text-gray-400">{{participant.email}}</p>
+                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Participating in: </p>
+                {% for event  in participant.events.all  %}
+                <p class="mb-1 font-normal text-gray-700 dark:text-gray-400">🎯 {{event.name}}</p>
+                {% endfor %}
+                <a href="{% url "participant-update" participant.id %}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    Update
+                    <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                    </svg>
+                </a>
+                <form class="inline" action="{% url "participant-delete" participant.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                        Delete
+                        <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                        </svg>
+                    </button>
+                </form>
+            </div>  
         {% endfor %}
     </div>
 {% endblock content  %}
