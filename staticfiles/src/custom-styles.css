@@ -1,0 +1,9 @@
+label{
+    color: white;
+}
+
+/* Style for the checkboxes */
+#id_events label {
+    color: gray;
+}
+
