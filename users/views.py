@@ -49,3 +49,20 @@ def sign_up(request):
         return redirect('sign-up')
 
     return render(request, "registrations/sign-up.html")
+
+def sign_in(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        user = User.objects.filter(username=username)
+        if not user.exists():
+            messages.error(request, "Incorrect Username!")
+            return redirect("sign-in")
+        user = authenticate(username=username, password=password)
+        if user is None:
+            messages.error(request, "Incorrect Password!")
+            return redirect("sign-in")
+        else:
+            login(request, user)
+            return redirect("event-list")
+    return render(request, "registrations/sign-in.html")
