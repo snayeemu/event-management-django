@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User, Permission, Group
 from users import forms
+from django.contrib.auth.tokens import default_token_generator 
 from django.http import HttpResponse
 
 
@@ -37,18 +38,35 @@ def sign_up(request):
             first_name=first_name,
             last_name=last_name,
             username=username,
-            email=email
+            email=email,
+            password=password
         )
         
-        user.set_password(password)
         user_group, isCreated = Group.objects.get_or_create(name="Participant")
         user.groups.add(user_group)
+        user.is_active = False
         user.save()
         
-        messages.success(request, "Account created Successfully!")
+        messages.success(request, "An Confirmation Email has Sent!")
         return redirect('sign-in')
 
     return render(request, "registrations/sign-up.html")
+
+def activate_user(request, user_id, token):
+    try:
+        user = User.objects.get(id=user_id)
+        if default_token_generator.check_token(user, token):
+            user.is_active = True
+            user.save()
+            messages.success(request, "Account Activated Successfully!")
+            return redirect("sign-in")
+        else:
+            return HttpResponse("Invalid URL")
+    except Exception as e:
+        print(str(e))
+        return HttpResponse("User Does not Exist")
+    
+    
 
 def sign_in(request):
     if request.method == "POST":
