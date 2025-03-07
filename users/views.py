@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User, Permission
+from django.contrib.auth.models import User, Permission, Group
 from users import forms
 from django.http import HttpResponse
 
@@ -41,10 +41,12 @@ def sign_up(request):
         )
         
         user.set_password(password)
+        user_group, isCreated = Group.objects.get_or_create(name="Participant")
+        user.groups.add(user_group)
         user.save()
         
         messages.success(request, "Account created Successfully!")
-        return redirect('sign-up')
+        return redirect('sign-in')
 
     return render(request, "registrations/sign-up.html")
 

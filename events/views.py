@@ -13,7 +13,7 @@ def event_list(request):
         Count("participants")
     )
     data = "abc"
-    if request.method == "POST":
+    if request.method == "POST": 
         data = request.POST
         if data["name"] != "" and data["category"] != "all":
             # category = models.Category.get(name=)
