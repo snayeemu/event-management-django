@@ -2,13 +2,11 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-
+from django.contrib.auth.models import User, Permission
+from users import forms
 from django.http import HttpResponse
 
 
-def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
 
 def sign_up(request):
     if request.method == 'POST':
@@ -70,3 +68,14 @@ def sign_in(request):
 def sign_out(request):
     logout(request)
     return redirect("sign-in")
+
+@login_required
+def create_group(request):
+    if request.method == "POST":
+        form = forms.CreateGroupForm(request.POST)
+        if form.is_valid():
+            group = form.save()
+            messages.success(request, f"Group {group.name} has created successfully!")
+            return redirect("create-group")
+    permissions = Permission.objects.all()
+    return render(request, "admin/create-group.html", {"permissions": permissions})

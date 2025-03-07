@@ -10,7 +10,7 @@ from datetime import datetime
 def event_list(request):
     # events = models.Event.objects.all()
     events = models.Event.objects.select_related("category").annotate(
-        Count("participant")
+        Count("participants")
     )
     data = "abc"
     if request.method == "POST":

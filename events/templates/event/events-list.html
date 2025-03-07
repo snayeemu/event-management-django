@@ -70,7 +70,7 @@
                 <div class="ms-2 mb-2">
                     <p>Name: {{ event.name }}</p>
                     <p>Category: {{event.category.name}}</p>
-                    <p>Total Participants: {{ event.participant__count}}</p>
+                    <p>Total Participants: {{ event.participants__count}}</p>
                     <div class="flex gap-2">
                         <a class="px-2 py-0.5 bg-green-500 rounded text-white uppercase" href="{% url "event-update" event.id %}">update</a>
                         <form action="{% url "event-delete" event.id%}" method="POST">
@@ -92,7 +92,7 @@
                     <a href="#">
                         <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{event.name}}</h5>
                     </a>
-                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Total Participants: {{event.participant__count}}</p>
+                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Total Participants: {{event.participants__count}}</p>
                     <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{event.description}}</p>
                     <a href="{% url "event-details" event.id %}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                         Read Details
