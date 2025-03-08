@@ -85,7 +85,7 @@ def event_details(request, pk):
 
 
 def participant_list(request):
-    participants = models.Participant.objects.prefetch_related("events").all()
+    participants = User.objects.prefetch_related("event_set").all()
     return render(
         request, "participant/participant-list.html", {"participants": participants}
     )
@@ -187,17 +187,15 @@ def category_delete(request, pk):
 def organizer_dashboard(request):
     # Aggregate query to calculate the total number of participants
     q = request.GET.get("q", "all")
-    total_participants = models.Participant.objects.aggregate(total=Count("id"))[
-        "total"
-    ]
+    total_participants = User.objects.filter(event__isnull=False).distinct().count()
     base = models.Event.objects.select_related("category")
     todays_event = base.filter(date=datetime.now().date())
     if q == "all":
-        events = base.annotate(Count("participant"))
+        events = base.annotate(Count("participants"))
     elif q == "upcoming":
-        events = base.filter(date__gt=datetime.now()).annotate(Count("participant"))
+        events = base.filter(date__gt=datetime.now()).annotate(Count("participants"))
     elif q == "past":
-        events = base.filter(date__lt=datetime.now()).annotate(Count("participant"))
+        events = base.filter(date__lt=datetime.now()).annotate(Count("participants"))
 
     counts = base.aggregate(
         total=Count("id"),
@@ -227,5 +225,5 @@ def rsvp(request, id):
             recipient_list = [request.user.email] 
             send_mail(subject, message, settings.EMAIL_HOST_USER, recipient_list)
         except Exception as e:
-            print(str(e))
+            print(str(e)) 
     return redirect("event-list") 

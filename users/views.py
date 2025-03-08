@@ -1,12 +1,14 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User, Permission, Group
 from users import forms
 from django.contrib.auth.tokens import default_token_generator 
 from django.http import HttpResponse
 
+def is_admin(user):
+    return user.groups.filter(name="Admin").exists()
 
 
 def sign_up(request):
@@ -90,6 +92,7 @@ def sign_out(request):
     return redirect("sign-in")
 
 @login_required
+@user_passes_test(is_admin, login_url="no-permission")
 def create_group(request):
     if request.method == "POST":
         form = forms.CreateGroupForm(request.POST)
@@ -99,3 +102,6 @@ def create_group(request):
             return redirect("create-group")
     permissions = Permission.objects.all()
     return render(request, "admin/create-group.html", {"permissions": permissions})
+
+def no_permission(request):
+    return render(request, "no-permission.html")
