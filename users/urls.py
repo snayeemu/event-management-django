@@ -9,6 +9,6 @@ urlpatterns = [
     path('sign-out', views.sign_out, name="sign-out"),
     path("create-group/", views.create_group, name="create-group"),
     path("activate/<int:user_id>/<str:token>/", views.activate_user),
-    path("no-permission/", views.no_permission, name="no-permission")
+    
 ]
 

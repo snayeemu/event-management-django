@@ -22,9 +22,9 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('events.urls')),
+    path('event/', include('events.urls')),
     path('user/', include('users.urls')),
-    path('core/', include('core.urls')),
+    path('', include('core.urls')),
 ] + debug_toolbar_urls()
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

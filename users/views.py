@@ -103,5 +103,3 @@ def create_group(request):
     permissions = Permission.objects.all()
     return render(request, "admin/create-group.html", {"permissions": permissions})
 
-def no_permission(request):
-    return render(request, "no-permission.html")
