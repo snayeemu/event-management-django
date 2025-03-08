@@ -52,9 +52,11 @@ class EventForm(StyledFormMixin, forms.ModelForm):
             "name": "Event Name",
             "description": "Event Description"
         }
-
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(EventForm, self).__init__(*args, **kwargs)
+        self.fields['image'].widget.attrs.update({
+            'class': 'hidden'
+        })
         self.apply_styled_widgets()
 
 

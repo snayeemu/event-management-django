@@ -2,8 +2,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from events import models, forms
 from django.contrib import messages
+from django.contrib.auth.models import User
 from django.db.models import Prefetch, Count, Q
 from datetime import datetime
+from django.conf import settings
+from django.core.mail import send_mail
 
 
 # Create your views here.
@@ -38,7 +41,7 @@ def event_create(request):
     event_form = forms.EventForm()
 
     if request.method == "POST":
-        event_form = forms.EventForm(request.POST)
+        event_form = forms.EventForm(request.POST, request.FILES)
 
         if event_form.is_valid():
             event_form.save()
@@ -208,3 +211,21 @@ def organizer_dashboard(request):
         "todays_event": todays_event, 
     }
     return render(request, "dashboard/organizer-dashboard.html", context)
+
+def rsvp(request, id):
+    event = models.Event.objects.get(id=id)
+    event_set = request.user.event_set.filter(id=id)
+    if event_set.exists():
+        messages.warning(request, f"Event {event.name} already added!")
+        return redirect("event-list")
+    else:
+        event.participants.add(request.user)
+        messages.success(request, f"Event {event.name} added successfully!")
+        try:
+            subject = f"RSVP Confirmation for {event.name}" 
+            message = f"Hello {request.user.username},\n\nYou have successfully RSVP'd to: {event.name}\nDate: {event.date}\nTime: {event.time}\nLocation: {event.location}\n\nThank you for joining!"
+            recipient_list = [request.user.email] 
+            send_mail(subject, message, settings.EMAIL_HOST_USER, recipient_list)
+        except Exception as e:
+            print(str(e))
+    return redirect("event-list") 
