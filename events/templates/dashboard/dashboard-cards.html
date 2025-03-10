@@ -1,0 +1,18 @@
+<div class="my-5 grid lg:grid-cols-4 gap-5"> 
+    <a href="{% url "participant-list" %}" class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center my-auto">
+        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Total Participants</h5>
+        <p class="font-normal text-4xl text-gray-700 dark:text-gray-400">{{total_participants}}</p>
+    </a>   
+    <a href="{% url "organizer-dashboard" %}?q=all" class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center my-auto">
+        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Total Events</h5>
+        <p class="font-normal text-4xl text-gray-700 dark:text-gray-400">{{counts.total}}</p>
+    </a>      
+    <a href="{% url "organizer-dashboard" %}?q=upcoming" class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center my-auto">
+        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Upcoming Events</h5>
+        <p class="font-normal text-4xl text-gray-700 dark:text-gray-400">{{counts.upcoming_events}}</p>
+    </a>      
+    <a href="{% url "organizer-dashboard" %}?q=past" class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center my-auto">
+        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Past Events</h5>
+        <p class="font-normal text-4xl text-gray-700 dark:text-gray-400">{{counts.past_events}}</p>
+    </a>      
+</div>

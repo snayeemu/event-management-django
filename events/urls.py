@@ -4,6 +4,7 @@ from django.urls import path, include
 from events import views
 
 urlpatterns = [
+    path("cards/", views.event_cards, name="event-cards"),
     path('<int:pk>/', views.event_details, name="event-details"),
     path('create/', views.event_create, name="event-create"),
     path('<int:pk>/update/', views.event_update, name="event-update"),

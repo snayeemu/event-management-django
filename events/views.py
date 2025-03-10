@@ -31,6 +31,26 @@ def event_list(request):
     context = {"events": events, "search_form": search_form, "data": data}
     return render(request, "event/events-list.html", context)
 
+def event_cards(request):
+    # events = models.Event.objects.all()
+    events = models.Event.objects.select_related("category").annotate(
+        Count("participants")
+    )
+    data = "abc"
+    if request.method == "POST": 
+        data = request.POST
+        if data["name"] != "" and data["category"] != "all":
+            # category = models.Category.get(name=)
+            events = events.filter(
+                name__icontains=data["name"], category__name=data["category"]
+            )
+        elif data["name"] != "":
+            events = events.filter(name__icontains=data["name"])
+        elif data["category"] != "all":
+            events = events.filter(category__name=data["category"])
+    context = {"events": events}
+    return render(request, "event/event-cards.html", context)
+
 
 def event_details(request, pk):
     event = models.Event.objects.prefetch_related("participant_set").get(id=pk)
