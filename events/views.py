@@ -61,7 +61,7 @@ def event_details(request, pk):
     return render(request, "events/event_detail.html", {"event": event})
 
 @login_required
-@permission_required("event.add_event", login_url="no-permission")
+@permission_required("events.add_event", login_url="no-permission")
 def event_create(request):
     event_form = forms.EventForm()
 
@@ -79,7 +79,7 @@ def event_create(request):
     return render(request, "event/events-forms.html", context)
 
 @login_required
-@permission_required("event.change_event", login_url="no-permission")
+@permission_required("events.change_event", login_url="no-permission")
 def event_update(request, pk):
     event = get_object_or_404(models.Event, id=pk)
     event_form = forms.EventForm(instance=event)
@@ -96,7 +96,7 @@ def event_update(request, pk):
     return render(request, "event/events-forms.html", context)
 
 @login_required
-@permission_required("event.delete_event", login_url="no-permission")
+@permission_required("events.delete_event", login_url="no-permission")
 def event_delete(request, pk):
     event = get_object_or_404(models.Event, id=pk)
     if request.method == "POST":
@@ -111,7 +111,7 @@ def event_details(request, pk):
     return render(request, "event/event-details.html", {"event": event})
 
 @login_required
-@permission_required("event.view_participant", login_url="no-permission")
+@permission_required("participant.view_participant", login_url="no-permission")
 def participant_list(request):
     participants = User.objects.prefetch_related("event_set").all()
     return render(
@@ -121,7 +121,7 @@ def participant_list(request):
 
 
 @login_required
-@permission_required("event.change_participant", login_url="no-permission")
+@permission_required("events.change_participant", login_url="no-permission")
 def participant_update(request, pk):
     participant = get_object_or_404(User, id=pk)
     participant_form = UserCreationForm(instance=participant)
@@ -140,14 +140,6 @@ def participant_update(request, pk):
     return render(request, "participant/participant-form.html", context)
 
 
-def participant_delete(request, pk):
-    participant = get_object_or_404(models.Participant, id=pk)
-
-    if request.method == "POST":
-        participant.delete()
-        messages.success(request, "Participant Deleted Successfully")
-        return redirect("participant-list")
-    return redirect("participant-list")
 
 
 def category_list(request):
