@@ -7,7 +7,11 @@ from django.db.models import Prefetch, Count, Q
 from datetime import datetime
 from django.conf import settings
 from django.core.mail import send_mail
+from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
+from django.contrib.auth.forms import UserCreationForm
 
+def is_organizer(user):
+    return user.groups.filter(name="Organizer").exists()
 
 # Create your views here.
 def event_list(request):
@@ -56,7 +60,8 @@ def event_details(request, pk):
     event = models.Event.objects.prefetch_related("participant_set").get(id=pk)
     return render(request, "events/event_detail.html", {"event": event})
 
-
+@login_required
+@permission_required("event.add_event", login_url="no-permission")
 def event_create(request):
     event_form = forms.EventForm()
 
@@ -73,7 +78,8 @@ def event_create(request):
     }
     return render(request, "event/events-forms.html", context)
 
-
+@login_required
+@permission_required("event.change_event", login_url="no-permission")
 def event_update(request, pk):
     event = get_object_or_404(models.Event, id=pk)
     event_form = forms.EventForm(instance=event)
@@ -89,7 +95,8 @@ def event_update(request, pk):
     context = {"event_form": event_form}
     return render(request, "event/events-forms.html", context)
 
-
+@login_required
+@permission_required("event.delete_event", login_url="no-permission")
 def event_delete(request, pk):
     event = get_object_or_404(models.Event, id=pk)
     if request.method == "POST":
@@ -103,7 +110,8 @@ def event_details(request, pk):
     event = get_object_or_404(models.Event, id=pk)
     return render(request, "event/event-details.html", {"event": event})
 
-
+@login_required
+@permission_required("event.view_participant", login_url="no-permission")
 def participant_list(request):
     participants = User.objects.prefetch_related("event_set").all()
     return render(
@@ -111,33 +119,20 @@ def participant_list(request):
     )
 
 
-def participant_create(request):
-    participant_form = forms.ParticipantForm()
 
-    if request.method == "POST":
-        participant_form = forms.ParticipantForm(request.POST)
-
-        if participant_form.is_valid():
-            participant_form.save()
-            messages.success(request, f"Participant created Successfully")
-            return redirect("participant-create")
-
-    return render(
-        request,
-        "participant/participant-form.html",
-        {"participant_form": participant_form},
-    )
-
-
+@login_required
+@permission_required("event.change_participant", login_url="no-permission")
 def participant_update(request, pk):
-    participant = get_object_or_404(models.Participant, id=pk)
-    participant_form = forms.ParticipantForm(instance=participant)
+    participant = get_object_or_404(User, id=pk)
+    participant_form = UserCreationForm(instance=participant)
 
     if request.method == "POST":
-        participant_form = forms.ParticipantForm(request.POST, instance=participant)
+        participant_form = UserCreationForm(request.POST, instance=participant)
 
         if participant_form.is_valid():
-            participant_form.save()
+            user = participant_form.save(commit=False)
+            user.set_password(request.POST.get("password"))
+            user.save()
             messages.success(request, f"Participant Updated Successfully")
             return redirect("participant-create")
 
@@ -203,7 +198,8 @@ def category_delete(request, pk):
         return redirect("category-list")
     return redirect("category-list")
 
-
+@login_required
+@user_passes_test(is_organizer, login_url="no-permission")
 def organizer_dashboard(request):
     # Aggregate query to calculate the total number of participants
     q = request.GET.get("q", "all")
@@ -230,6 +226,7 @@ def organizer_dashboard(request):
     }
     return render(request, "dashboard/organizer-dashboard.html", context)
 
+@login_required
 def rsvp(request, id):
     event = models.Event.objects.get(id=id)
     event_set = request.user.event_set.filter(id=id)

@@ -9,11 +9,30 @@
                 {% endfor %}
             </ul>
         {% endif %}
-        <form method="POST" class="text-black">
+        <form method="POST">
             {% csrf_token %}
+            {% if participant_form.non_field_errors %}
+                <div class="text-red-500 mb-4">
+                    {% for error in participant_form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
             {% comment %} {{category_form.as_p}}{% endcomment %}
-            {{participant_form.as_p}} 
-            <button class="px-4 py-2 rounded-2xl bg-green-500 my-4 text-white" type="submit">Submit</button>
+            {% for field in participant_form.visible_fields %}
+                <p class="text-white">{{ field.label_tag }}</p>
+                {{ field }} 
+                {% if field.errors %}
+                    <div class="text-red-500 text-sm mt-1">
+                        {% for error in field.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}    
+            {% endfor %}
+            <div>
+                <button class="px-4 py-2 rounded-2xl bg-green-500 my-4 text-white" type="submit">Submit</button>
+            </div>
         </form>
     </div>
 {% endblock content  %}
