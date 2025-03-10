@@ -1,11 +1,10 @@
 {% extends "dashboard/dashboard-base.html" %}
-{% block title %}Organizer Dashboard{% endblock title %}
-
+{% block title %}Admin Dashboard{% endblock title %}
 {% block events  %}
     {% include "dashboard/organizer-side-nav.html" %}
     {% include "dashboard/dashboard-cards.html" %}
 
-    <div class="mb-11">
+    <div class="mb-11 p-4 lg:p-0">
         <div class="relative overflow-x-auto pb-5">
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -90,5 +89,10 @@
             </table>
         </div>
         {% endif %}
+        
+        <div class="my-11">
+            {% include "dashboard/admin-participant-table.html" %}
+        </div>
     </div>
+
 {% endblock events  %}

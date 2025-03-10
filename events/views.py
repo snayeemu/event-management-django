@@ -113,7 +113,7 @@ def event_details(request, pk):
 @login_required
 @permission_required("participant.view_participant", login_url="no-permission")
 def participant_list(request):
-    participants = User.objects.prefetch_related("event_set").all()
+    participants = User.objects.filter(event__isnull=False).distinct().all()
     return render(
         request, "participant/participant-list.html", {"participants": participants}
     )
@@ -238,3 +238,32 @@ def rsvp(request, id):
         except Exception as e:
             print(str(e)) 
     return redirect("event-list") 
+
+def admin_dashboard(request):
+    categories = models.Category.objects.prefetch_related(Prefetch("event_set")).all()
+    q = request.GET.get("q", "all")
+    participants = User.objects.filter(event__isnull=False).distinct().all()
+    total_participants = User.objects.filter(event__isnull=False).distinct().count()
+    base = models.Event.objects.select_related("category")
+    todays_event = base.filter(date=datetime.now().date())
+    if q == "all":
+        events = base.annotate(Count("participants"))
+    elif q == "upcoming":
+        events = base.filter(date__gt=datetime.now()).annotate(Count("participants"))
+    elif q == "past":
+        events = base.filter(date__lt=datetime.now()).annotate(Count("participants"))
+
+    counts = base.aggregate(
+        total=Count("id"),
+        upcoming_events=Count("id", Q(date__gt=datetime.now())),
+        past_events=Count("id", Q(date__lt=datetime.now())),
+    )
+    context = {
+        "participants": participants,
+        "total_participants": total_participants,
+        "events": events,
+        "counts": counts,
+        "todays_event": todays_event, 
+        "categories": categories,
+    }
+    return render(request, "dashboard/admin-dashboard.html", context)
