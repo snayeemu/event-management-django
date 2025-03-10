@@ -94,6 +94,10 @@ def sign_out(request):
 @login_required
 @user_passes_test(is_admin, login_url="no-permission")
 def create_group(request):
+    exist = Group.objects.filter(name=request.POST.get("name")).exists()
+    if exist:
+        messages.error(request, f"Group {request.POST.get('name')} already exists!")
+        return redirect("create-group")
     if request.method == "POST":
         form = forms.CreateGroupForm(request.POST)
         if form.is_valid():

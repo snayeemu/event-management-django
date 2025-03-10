@@ -20,6 +20,9 @@
                         <th scope="col" class="px-6 py-3">
                             Location 
                         </th>
+                        <th scope="col" class="px-6 py-3">
+                            &nbsp
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -29,7 +32,7 @@
                             {{event.name}}
                         </th>
                         <td class="px-6 py-4">
-                            {{event.participant__count}}
+                            {{event.participants__count}}
                         </td>
                         <td class="px-6 py-4">
                             {{event.category}}
@@ -37,10 +40,20 @@
                         <td class="px-6 py-4">
                             {{event.location}}
                         </td>
+                        <td class="px-6 py-4">
+                            <a href="{% url "event-update" event.id %}" class="text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800">Update</a>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
+        </div>
+
+        <div class="my-11">
+            {% include "category/category-cards.html" %}
+            <div class="text-center">
+                <a href="{% url "category-create" %}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Create New Category</a>
+            </div>
         </div>
         
         <h1 class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white mt-5">Todays Event</h1>

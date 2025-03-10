@@ -202,6 +202,7 @@ def category_delete(request, pk):
 @user_passes_test(is_organizer, login_url="no-permission")
 def organizer_dashboard(request):
     # Aggregate query to calculate the total number of participants
+    categories = models.Category.objects.prefetch_related(Prefetch("event_set")).all()
     q = request.GET.get("q", "all")
     total_participants = User.objects.filter(event__isnull=False).distinct().count()
     base = models.Event.objects.select_related("category")
@@ -223,6 +224,7 @@ def organizer_dashboard(request):
         "events": events,
         "counts": counts,
         "todays_event": todays_event, 
+        "categories": categories,
     }
     return render(request, "dashboard/organizer-dashboard.html", context)
 
