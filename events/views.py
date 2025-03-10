@@ -123,21 +123,19 @@ def participant_list(request):
 @login_required
 @permission_required("events.change_participant", login_url="no-permission")
 def participant_update(request, pk):
+    events = models.Event.objects.all()
     participant = get_object_or_404(User, id=pk)
-    participant_form = UserCreationForm(instance=participant)
 
     if request.method == "POST":
-        participant_form = UserCreationForm(request.POST, instance=participant)
+        participant.username = request.POST.get("username")
+        # print(request.POST.getlist("events"))
+        participant.event_set.set(request.POST.getlist("events"))
+        participant.save()
+        messages.success(request, f"Participant Updated Successfully")
+        return redirect("participant-update", participant.id)
 
-        if participant_form.is_valid():
-            user = participant_form.save(commit=False)
-            user.set_password(request.POST.get("password"))
-            user.save()
-            messages.success(request, f"Participant Updated Successfully")
-            return redirect("participant-create")
-
-    context = {"participant_form": participant_form}
-    return render(request, "participant/participant-form.html", context)
+    context = {"participant": participant, "events": events}
+    return render(request, "participant/participant-form.html", context) 
 
 
 
