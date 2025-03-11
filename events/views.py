@@ -113,7 +113,7 @@ def event_details(request, pk):
 @login_required
 @permission_required("participant.view_participant", login_url="no-permission")
 def participant_list(request):
-    participants = User.objects.filter(event__isnull=False).distinct().all()
+    participants = User.objects.all()
     return render(
         request, "participant/participant-list.html", {"participants": participants}
     )
@@ -137,7 +137,15 @@ def participant_update(request, pk):
     context = {"participant": participant, "events": events}
     return render(request, "participant/participant-form.html", context) 
 
-
+def participant_delete(request, pk):
+    try:
+        participant = User.objects.get(id=pk)
+        if participant:
+            participant.delete()
+            messages.success(request, "Deleted Successfully!!")
+    except Exception as e:
+        print(str(e))
+    return redirect("participant-list") 
 
 
 def category_list(request):
@@ -240,7 +248,7 @@ def rsvp(request, id):
 def admin_dashboard(request):
     categories = models.Category.objects.prefetch_related(Prefetch("event_set")).all()
     q = request.GET.get("q", "all")
-    participants = User.objects.filter(event__isnull=False).distinct().all()
+    participants = User.objects.all()
     total_participants = User.objects.filter(event__isnull=False).distinct().count()
     base = models.Event.objects.select_related("category")
     todays_event = base.filter(date=datetime.now().date())
