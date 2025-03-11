@@ -281,14 +281,6 @@ def admin_dashboard(request):
     }
     return render(request, "dashboard/admin-dashboard.html", context)
 
-@login_required
-def dashboard(request):
-    if is_organizer(request.user):
-        return redirect("organizer-dashboard")
-    elif is_admin(request.user):
-        return redirect("admin-dashboard")
-    else:
-        return redirect("participant-dashboard")
 
 @login_required 
 @user_passes_test(is_participant, login_url="no-permission")
@@ -318,3 +310,12 @@ def participant_dashboard(request):
         "categories": categories,
     }
     return render(request, "dashboard/participant-dashboard.html", context)
+
+@login_required
+def dashboard(request):
+    if is_organizer(request.user):
+        return redirect("organizer-dashboard")
+    elif is_admin(request.user):
+        return redirect("admin-dashboard")
+    else:
+        return redirect("participant-dashboard")
