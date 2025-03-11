@@ -107,6 +107,8 @@ def create_group(request):
     permissions = Permission.objects.all()
     return render(request, "admin/create-group.html", {"permissions": permissions})
 
+@login_required
+@user_passes_test(is_admin, login_url="no-permission")
 def update_group(request, id):
     try:
         group = Group.objects.prefetch_related("permissions").get(id=id)
@@ -126,13 +128,17 @@ def update_group(request, id):
     
     return render(request, "admin/update-group.html", context) 
 
+@login_required
+@user_passes_test(is_admin, login_url="no-permission")
 def delete_group(request, id):
     group = Group.objects.get(id=id)
     if request.method == "POST":
         group.delete()
-        return redirect("dashboard")
+        return redirect("dashboard") 
     return redirect("dashboard")
 
+@login_required
+@user_passes_test(is_admin, login_url="no-permission")
 def update_role(request, id):
     user = User.objects.get(id=id)
     if request.method == "POST":
