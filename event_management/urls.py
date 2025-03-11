@@ -25,6 +25,7 @@ urlpatterns = [
     path('event/', include('events.urls')),
     path('user/', include('users.urls')),
     path('', include('core.urls')),
-] + debug_toolbar_urls()
+]  
+# + debug_toolbar_urls()
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
