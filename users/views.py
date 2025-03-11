@@ -84,7 +84,7 @@ def sign_in(request):
             return redirect("sign-in")
         else:
             login(request, user)
-            return redirect("event-list")
+            return redirect("dashboard")
     return render(request, "registrations/sign-in.html")
 
 def sign_out(request):
@@ -107,3 +107,28 @@ def create_group(request):
     permissions = Permission.objects.all()
     return render(request, "admin/create-group.html", {"permissions": permissions})
 
+def update_group(request, id):
+    try:
+        group = Group.objects.prefetch_related("permissions").get(id=id)
+    except Exception as e:
+        print(e)
+    if request.method == "POST":
+        group.name = request.POST.get("name")
+        group.permissions.set(request.POST.getlist("permissions"))
+        group.save()
+        messages.success(request, f"Group {group.name} has updated successfully!")
+        return redirect("update-group", id)
+    permissions = Permission.objects.all()
+    context = {
+        "permissions": permissions,
+        "group": group
+    }
+    
+    return render(request, "admin/update-group.html", context) 
+
+def delete_group(request, id):
+    group = Group.objects.get(id=id)
+    if request.method == "POST":
+        group.delete()
+        return redirect("dashboard")
+    return redirect("dashboard")

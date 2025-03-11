@@ -1,8 +1,8 @@
 {% extends "base/base.html" %}
-{% block title %}Events List{% endblock title %}
+{% block title %}Create Group{% endblock title %}
 {% block content %}
-    {% if messages %}
-        <div class="flex flex-col justify-center items-center mb-2">
+    <div class="my-11">
+        <div class="flex flex-col justify-center items-center">
             {% for message in messages %}
                 {% if message.tags == "success" %}
                     <div id="toast-success-{{forloop.counter}}" class="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow-sm dark:text-gray-400 dark:bg-gray-800" role="alert">
@@ -55,47 +55,28 @@
                 {% endif %}
             {% endfor %}
         </div>
-    {% endif %}
 
-    <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-5 my-11">
-        {% for event  in events %}
-            <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 mx-auto relative flex flex-col h-full">
-                <a href="#">
-                    <img class="rounded-t-lg w-full h-[300px]" src={{event.image.url}} alt="" />
-                </a>
-                <div class="p-5 pb-0">
-                    <a href="#">
-                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{event.name}}</h5>
-                    </a>
-                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Total Participants: {{event.participants__count}}</p>
-                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{event.description}}</p>
-                </div>
-                <div class="mt-auto pb-3">
-                    <div class="flex justify-around items-center">
-                        <a href="{% url "event-details" event.id %}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                            Read Details
-                             <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-                            </svg>
-                        </a>
-                        <a href="{% url "event-update" event.id %}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
-                            Update
-                             <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-                            </svg>
-                        </a>
-                        <form action="{% url "event-delete" event.id %}" method="post">
-                            {% csrf_token %}
-                            <button type="submit" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
-                                Delete
-                                 <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-                                </svg>
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>            
-        {% endfor %}
+        <form action="" method="post" class="max-w-md mx-auto">
+            {% csrf_token %}
+            <div>
+                <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Group name:</label>
+                <input name="name" value="{{group.name}}" type="text" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter group name" required />
+            </div>
+            <p class="text-5xl text-gray-900 dark:text-white mt-4 mb-2">Permissions:</p>
+            {% for permission in permissions %}
+                {% if permission in group.permissions.all %}
+                    <div class="flex items-center mb-4">
+                        <input checked name="permissions" id="default-checkbox-{{forloop.counter}}" type="checkbox" value={{permission.id}} class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                        <label for="default-checkbox" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{permission.name}}|{{permission.codename}}</label>
+                    </div> 
+                {% else %}
+                    <div class="flex items-center mb-4">
+                        <input name="permissions" id="default-checkbox-{{forloop.counter}}" type="checkbox" value={{permission.id}} class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                        <label for="default-checkbox" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{permission.name}}|{{permission.codename}}</label>
+                    </div> 
+                {% endif %}
+            {% endfor %}
+            <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Create Group</button>
+        </form>
     </div>
 {% endblock content %}

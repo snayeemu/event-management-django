@@ -21,7 +21,9 @@ urlpatterns = [
     path('categories/<int:pk>/update', views.category_update, name='category-update'),
     path('categories/<int:pk>/delete', views.category_delete, name='category-delete'),
 
-    path('dashboard/organizer', views.organizer_dashboard, name='organizer-dashboard'),
-    path('dashboard/admin', views.admin_dashboard, name='admin-dashboard'),
+    path('dashboard/organizer/', views.organizer_dashboard, name='organizer-dashboard'),
+    path('dashboard/admin/', views.admin_dashboard, name='admin-dashboard'),
+    path('dashboard/participant/', views.participant_dashboard, name='participant-dashboard'),
+    path('dashboard/', views.dashboard, name='dashboard'),
 ]
 

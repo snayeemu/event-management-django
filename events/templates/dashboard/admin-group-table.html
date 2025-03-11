@@ -1,0 +1,23 @@
+<h1 class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white mx-auto">Manage <mark class="px-2 text-white bg-blue-600 rounded-sm dark:bg-blue-500">Groups</mark>:</h1>
+
+<div class="grid justify-center items-center lg:grid-cols-3 gap-5">
+    {% for group in groups %}
+        <div class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{group.name}}</h5>
+            <p class="text-xl text-gray-900 dark:text-white">Users List:    </p>
+            {% for user in group.user_set.all %}
+                <p class="font-normal text-gray-700 dark:text-gray-400">{{user.username}}</p>
+            {% endfor %}
+            <div class="flex justify-end gap-5">
+                <a href="{% url "update-group" group.id %}" class="ms-auto font-medium text-blue-600 dark:text-blue-500 hover:underline">Update Group</a>
+                <form action="{% url "delete-group" group.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Delete</button>
+                </form>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+<div class="mt-5">
+    <a href="{% url "create-group" %}" class="w-full py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Create Group</a>
+</div>

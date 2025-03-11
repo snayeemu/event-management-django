@@ -2,16 +2,19 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from events import models, forms
 from django.contrib import messages
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission, Group
 from django.db.models import Prefetch, Count, Q
 from datetime import datetime
 from django.conf import settings
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
-from django.contrib.auth.forms import UserCreationForm
+from users.views import is_admin
 
 def is_organizer(user):
     return user.groups.filter(name="Organizer").exists()
+
+def is_participant(user):
+    return user.groups.filter(name="Participant").exists()
 
 # Create your views here.
 def event_list(request):
@@ -102,8 +105,8 @@ def event_delete(request, pk):
     if request.method == "POST":
         event.delete()
         messages.success(request, "Event deleted Successfully")
-        return redirect("event-list")
-    return redirect("event-list")
+        return redirect("event-cards")
+    return redirect("event-cards")
 
 
 def event_details(request, pk):
@@ -253,6 +256,8 @@ def admin_dashboard(request):
     total_participants = User.objects.all().distinct().count()
     base = models.Event.objects.select_related("category")
     todays_event = base.filter(date=datetime.now().date())
+    groups = Group.objects.prefetch_related("user_set").all()
+
     if q == "all":
         events = base.annotate(Count("participants"))
     elif q == "upcoming":
@@ -272,5 +277,44 @@ def admin_dashboard(request):
         "counts": counts,
         "todays_event": todays_event, 
         "categories": categories,
+        "groups": groups,
     }
     return render(request, "dashboard/admin-dashboard.html", context)
+
+@login_required
+def dashboard(request):
+    if is_organizer(request.user):
+        return redirect("organizer-dashboard")
+    elif is_admin(request.user):
+        return redirect("admin-dashboard")
+    else:
+        return redirect("participant-dashboard")
+
+@login_required 
+@user_passes_test(is_participant, login_url="no-permission")
+def participant_dashboard(request):
+    categories = models.Category.objects.prefetch_related(Prefetch("event_set")).all()
+    q = request.GET.get("q", "all")
+    total_participants = User.objects.all().distinct().count()
+    base = models.Event.objects.select_related("category")
+    enrolled_event = request.user.event_set.all()
+    if q == "all":
+        events = base.annotate(Count("participants"))
+    elif q == "upcoming":
+        events = base.filter(date__gt=datetime.now()).annotate(Count("participants"))
+    elif q == "past":
+        events = base.filter(date__lt=datetime.now()).annotate(Count("participants"))
+
+    counts = base.aggregate(
+        total=Count("id"),
+        upcoming_events=Count("id", Q(date__gt=datetime.now())),
+        past_events=Count("id", Q(date__lt=datetime.now())),
+    )
+    context = {
+        "total_participants": total_participants,
+        "events": events,
+        "counts": counts,
+        "enrolled_event": enrolled_event, 
+        "categories": categories,
+    }
+    return render(request, "dashboard/participant-dashboard.html", context)
