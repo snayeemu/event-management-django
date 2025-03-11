@@ -132,3 +132,12 @@ def delete_group(request, id):
         group.delete()
         return redirect("dashboard")
     return redirect("dashboard")
+
+def update_role(request, id):
+    user = User.objects.get(id=id)
+    if request.method == "POST":
+        role = request.POST.get("role")
+        if role != "":
+            user.groups.clear()
+            user.groups.add(role)
+    return redirect("dashboard")
