@@ -139,10 +139,11 @@ def participant_update(request, pk):
 
 def participant_delete(request, pk):
     try:
-        participant = User.objects.get(id=pk)
-        if participant:
-            participant.delete()
-            messages.success(request, "Deleted Successfully!!")
+        if request.method == "POST":
+            participant = User.objects.get(id=pk)
+            if participant:
+                participant.delete()
+                messages.success(request, "Deleted Successfully!!")
     except Exception as e:
         print(str(e))
     return redirect("participant-list") 
@@ -202,7 +203,7 @@ def organizer_dashboard(request):
     # Aggregate query to calculate the total number of participants
     categories = models.Category.objects.prefetch_related(Prefetch("event_set")).all()
     q = request.GET.get("q", "all")
-    total_participants = User.objects.filter(event__isnull=False).distinct().count()
+    total_participants = User.objects.all().distinct().count()
     base = models.Event.objects.select_related("category")
     todays_event = base.filter(date=datetime.now().date())
     if q == "all":
@@ -249,7 +250,7 @@ def admin_dashboard(request):
     categories = models.Category.objects.prefetch_related(Prefetch("event_set")).all()
     q = request.GET.get("q", "all")
     participants = User.objects.all()
-    total_participants = User.objects.filter(event__isnull=False).distinct().count()
+    total_participants = User.objects.all().distinct().count()
     base = models.Event.objects.select_related("category")
     todays_event = base.filter(date=datetime.now().date())
     if q == "all":
