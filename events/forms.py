@@ -52,24 +52,13 @@ class EventForm(StyledFormMixin, forms.ModelForm):
             "name": "Event Name",
             "description": "Event Description"
         }
-
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(EventForm, self).__init__(*args, **kwargs)
+        self.fields['image'].widget.attrs.update({
+            'class': 'hidden'
+        })
         self.apply_styled_widgets()
 
-
-class ParticipantForm(StyledFormMixin, forms.ModelForm):
-    class Meta:
-        model = models.Participant
-        fields = "__all__"
-        widgets = {"events": forms.CheckboxSelectMultiple}
-        labels = {
-            "name": "Participant Name",
-        }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.apply_styled_widgets()
 
 
 class CategoryForm(StyledFormMixin, forms.ModelForm):

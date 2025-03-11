@@ -1,114 +1,51 @@
 {% extends "dashboard/dashboard-base.html" %}
+{% block title %}Organizer Dashboard{% endblock title %}
+
 {% block events  %}
-    {% comment %} <div class="bg-white rounded-xl shadow-sm">
-        <div class="grid grid-cols-4 p-4 border-b border-gray-100 text-sm text-gray-500">
-        <div>EVENT TITLE</div>
-        <div>DATE</div>
-        <div>TEAM</div> 
-        <div>LOCATION</div>
-        </div>
-        <!-- Task Items -->
-        <div class="divide-y divide-gray-100">
-        {% for event in events %}
-            <!-- Task 1 -->
-            <div class="grid grid-cols-4 gap-4 p-4 items-center">
-                <div class="flex items-center gap-2">
-                <div class="w-2 h-2 rounded-full bg-green-500"></div>
-                <span>{{event.name}}</span>
-                </div>
-                <div>
-                <span class="px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-sm">{{event.date}}</span>
-                </div>
-                <div class="flex -space-x-2">
-                {% for participant in event.participant_set.all %}
-                    <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm border-2 border-white">
-                    {% if participant.name|length > 2 %}
-                        {{participant.name|slice:2}}
-                        {% else %}
-                        {{participant.name}}
-                    {% endif %}
-                    </div>
-                {% endfor %}
-                </div>
-                <div class="text-gray-500">{{event.location}}</div>
+    {% include "dashboard/organizer-side-nav.html" %}
+    {% include "dashboard/dashboard-cards.html" %}
+
+    <div class="mb-11">
+        {% include "dashboard/event-list-table.html" %}
+
+        <div class="my-11">
+            {% include "category/category-cards.html" %}
+            <div class="text-center">
+                <a href="{% url "category-create" %}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Create New Category</a>
             </div>
-        {% endfor %} 
         </div>
-    </div> {% endcomment %}
-
-
-
-    <div class="relative overflow-x-auto pb-5">
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                    <th scope="col" class="px-6 py-3">
-                        Events
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Participants
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Category
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Location 
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for event  in events  %}
-                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        {{event.name}}
-                    </th>
-                    <td class="px-6 py-4">
-                        {{event.participant__count}}
-                    </td>
-                    <td class="px-6 py-4">
-                        {{event.category}}
-                    </td>
-                    <td class="px-6 py-4">
-                        {{event.location}}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        
+        <h1 class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white mt-5">Todays Event</h1>
+        {% if todays_event.count == 0  %}
+            <p class="font-normal text-4xl text-gray-700 dark:text-gray-400 pb-5">No events Scheduled for today!!</p>
+        {% else %}
+        <div class="relative overflow-x-auto pb-5">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">
+                            Events
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Time 
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event  in todays_event  %}
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            {{event.name}}
+                        </th>
+                        <td class="px-6 py-4">
+                            {{event.time}}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% comment %} <p class="font-normal text-4xl text-gray-700 dark:text-gray-400">No events Scheduled for today!!</p> {% endcomment %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
     </div>
-    
-    <h1 class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white mt-5">Todays Event</h1>
-    {% if todays_event.count == 0  %}
-        <p class="font-normal text-4xl text-gray-700 dark:text-gray-400 pb-5">No events Scheduled for today!!</p>
-    {% else %}
-    <div class="relative overflow-x-auto pb-5">
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                    <th scope="col" class="px-6 py-3">
-                        Events
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Time 
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for event  in todays_event  %}
-                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        {{event.name}}
-                    </th>
-                    <td class="px-6 py-4">
-                        {{event.time}}
-                    </td>
-                </tr>
-                {% endfor %}
-                {% comment %} <p class="font-normal text-4xl text-gray-700 dark:text-gray-400">No events Scheduled for today!!</p> {% endcomment %}
-            </tbody>
-        </table>
-    </div>
-    {% endif %}
-
-    
 {% endblock events  %}

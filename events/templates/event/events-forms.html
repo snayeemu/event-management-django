@@ -1,7 +1,7 @@
 {% extends "base/base.html" %}
 {% block title %}Event Form{% endblock title %}
 {% block content  %}
-    <div class="max-w-[400px] mx-auto mt-5">
+    <div class="max-w-[400px] mx-auto mt-5 my-11">
         {% if messages %}
             <ul class="messages">
                 {% for message in messages %}
@@ -9,11 +9,21 @@
                 {% endfor %}
             </ul>
         {% endif %}
-        <form method="POST">
+        <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            {{event_form.as_p}} 
-            {% comment %} {{category_form.as_p}}
-            {{participant_form.as_p}} {% endcomment %}
+            {% for field in event_form.visible_fields %}
+                {% if field.name != "image" %}
+                    <p class="text-white">{{ field.label }}</p>
+                    {{ field }}     
+                {% endif %}
+            {% endfor %}
+
+            <div class="mt-5">
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_input">Upload file</label>
+                <input name="image" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="file_input_help" id="file_input" type="file">
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">SVG, PNG, JPG or GIF (MAX. 800x400px).</p>
+            </div>
+            
             <button class="px-4 py-2 rounded-2xl bg-green-500 my-4 text-white" type="submit">Submit</button>
         </form>
     </div>
