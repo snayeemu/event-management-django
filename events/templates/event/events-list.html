@@ -133,25 +133,27 @@
 
 
 
-            <a href="{% url "event-details" event.id %}">
-                <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 mx-auto relative flex flex-col h-full">
-                    
-                        <img class="rounded-t-lg w-full h-[300px]" src={{event.image.url}} alt="" />
-                    
-                    <div class="p-5 pb-0">
-                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{event.name}}</h5>
-                        <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Total Participants: {{event.participants__count}}</p>
-                        <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{event.description}}</p>
-                    </div>
-                    <div class="mt-auto">
-                        <div>
-                            <a href="{% url "rsvp" event.id %}">
-                                <button type="button" class="mt-2 focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium text-sm px-5 py-2.5 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900 w-full">RSVP</button>
-                            
+            <div>
+                <a href="{% url "event-details" event.id %}">
+                    <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 mx-auto relative flex flex-col h-full">
+                        
+                            <img class="rounded-t-lg w-full h-[300px]" src={{event.image.url}} alt="" />
+                        
+                        <div class="p-5 pb-0">
+                                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{event.name}}</h5>
+                            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Total Participants: {{event.participants__count}}</p>
+                            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{event.description}}</p>
                         </div>
-                    </div>
-                </div> 
-            </a>           
+                        <div class="mt-auto">
+                            <div>
+                                <a href="{% url "rsvp" event.id %}">
+                                    <button type="button" class="mt-2 focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium text-sm px-5 py-2.5 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900 w-full">RSVP</button>
+                                
+                            </div>
+                        </div>
+                    </div> 
+                </a>  
+            </div>         
         {% endfor %}
     </div>
 {% endblock content %}
